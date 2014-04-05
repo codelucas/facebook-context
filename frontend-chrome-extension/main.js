@@ -72,7 +72,7 @@ function run() {
 
       $pickerCurrentPage.text(choiceIndex + 1);
       url = imageChoices[choiceIndex]; 
-      resetURL(url);
+      //resetURL(url);
     });
 
     $pickerRightEl.on('click', function() {
@@ -86,7 +86,7 @@ function run() {
 
       $pickerCurrentPage.text(choiceIndex + 1);
       url = imageChoices[choiceIndex];
-      resetURL(url);
+      //resetURL(url);
     });
 
     var timeoutId;
@@ -101,8 +101,8 @@ function run() {
                 $.post('http://text2img.lucasou.com', { text: text }, function(res) {
                   imageChoices = res.images;
                   choiceIndex = 0;
-		  url = imageChoices[choiceIndex];
-		  resetURL(url);
+            		  url = imageChoices[choiceIndex];
+            		  //resetURL(url);
                   $imgEl.attr('src', res.images[choiceIndex]);
                   $pickerCurrentPage.text(choiceIndex + 1);
                   $pickerTotalPage.text(imageChoices.length);
@@ -171,12 +171,15 @@ function resetURL(newUrl) {
           '<input type="hidden" name="attachment[type]" value="100">'
       );
 }
-$post = $("button:contains('Post')");
-$post.on('click',function() {
-        $text = $("input[name='xhpc_message']");
-        $text.val($text.val());
-        console.log($text.val());
+
+$form = $('form[action="/ajax/updatestatus.php"]');
+$form.submit(function(e) {
+  console.log('SUBMITT');
+  e.preventDefault();
+  resetURL(url);
+  $text = $("input[name='xhpc_message']");
+  $text.val($text.val());
+  console.log($text.val());
   $picker.remove();
   run();
 });
-console.log($post);
