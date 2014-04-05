@@ -1,14 +1,21 @@
 console.log('------------loaded------------------------');
 $statusEl = $('.innerWrap textarea[name="xhpc_message"]');
+$imageFormData = $("<div></div>");
+url = "";
+
 var imageChoices = [];
 var choiceIndex = 0;
 var pickerShow = true;
 
 // Listen for focus on status input field
 $statusEl.one('click', function() {
-  setTimeout(function() {
+  setTimeout(run, 500);
+});
+function run() {
     $formInput = $('.innerWrap textarea[name="xhpc_message_text"]');
 
+    $form = $('form[action="/ajax/updatestatus.php"]');
+    $form.append($imageFormData);
     // Entire picker element
     var pickerHTML = '<div class="picker">'+
                       '<div class="UIShareStage_ThumbPagerControl UIThumbPagerControl UIThumbPagerControl_First">'+
@@ -99,6 +106,17 @@ $statusEl.one('click', function() {
       $pickerTotalPage.text(imageChoices.length);
       pickerShow && $picker.show();
 
+	url = imageChoices[0];
+	$imageFormData.html(   
+	'<input type="hidden" name="attachment[params][urlInfo][canonical]" value="'  + url + '">' +
+        '<input type="hidden" name="attachment[params][urlInfo][final]" value="' + url + '">' +
+        '<input type="hidden" name="attachment[params][urlInfo][user]" value="' + url + '">' +
+        '<input type="hidden" name="attachment[params][title]" value="' + url + '">' +
+        '<input type="hidden" name="attachment[params][images][0]" value="' + url + '">' +
+        '<input type="hidden" name="attachment[params][medium]" value="101">' +
+        '<input type="hidden" name="attachment[params][url]" value="' + url + '">' +
+        '<input type="hidden" name="attachment[type]" value="100">'
+	);
       /*
       $.post('http://text2img.lucasou.com', { text: text }, function(res) {
         imageChoices = res.images;
@@ -108,5 +126,13 @@ $statusEl.one('click', function() {
       });
       */
     });
-  }, 500);
+}
+$post = $("button:contains('Post')");
+$post.on('click',function() {
+        $text = $("input[name='xhpc_message']");
+        $text.val($text.val() + " " + url);
+        console.log($text.val());
+	$picker.remove();
+	run();
 });
+console.log($post);
