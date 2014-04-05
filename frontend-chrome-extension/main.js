@@ -39,8 +39,8 @@ function run() {
                           'Choose a Thumbnail'+
                         '</div>'+
                         '<div class="uiInputLabel clearfix uiInputLabelLegacy mts">'+
-                          '<input class="UIThumbPagerControl_NoPicture uiInputLabelInput uiInputLabelCheckbox" type="checkbox" value="true" name="no_picture" id="u_9_0">'+
-                          '<label for="u_9_0" class="uiInputLabelLabel">No Thumbnail</label>'+
+                          '<input id="pickerNoPicture" class="UIThumbPagerControl_NoPicture uiInputLabelInput uiInputLabelCheckbox" type="checkbox" value="true" name="no_picture" id="u_9_0">'+
+                          '<label for="pickerNoPicture" class="uiInputLabelLabel">No Thumbnail</label>'+
                         '</div>'+
                       '</div>'+
                     '</div>';
@@ -174,12 +174,15 @@ function resetURL(newUrl) {
 
 $form = $('form[action="/ajax/updatestatus.php"]');
 $form.submit(function(e) {
-  console.log('SUBMITT');
   e.preventDefault();
-  resetURL(url);
-  $text = $("input[name='xhpc_message']");
-  $text.val($text.val());
-  console.log($text.val());
+  console.log('SUBMITT');
+  console.log($('#pickerNoPicture').prop('checked'));
+  if (!$('#pickerNoPicture').prop('checked')) { 
+    resetURL(url);
+    setTimeout(function() {
+      run();
+      $imageFormData.html('<div></div>');
+    }, 100);
+  }
   $picker.remove();
-  run();
 });
