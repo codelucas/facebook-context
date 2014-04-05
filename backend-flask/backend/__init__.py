@@ -28,7 +28,7 @@ def text_to_keyword(text):
     beautiful Denver, Colorado. I guess I will have to head over\
     to the Apple Store and buy a new one.'
 
-    response = alchemyapi.keywords('text', demo_text, {'sentiment': 1})
+    response = alchemyapi.keywords('text', text, {'sentiment': 1})
 
     if response['status'] == 'OK':
         # print(json.dumps(response, indent=4))
@@ -74,7 +74,6 @@ def keyword_to_images(keyword):
     url = ('https://ajax.googleapis.com/ajax/services/search/images?' +
            'v=1.0&q='+searchTerm+'&start='+str(0)+'&userip=MyIP')
 
-    # print url
     request_obj = urllib2.Request(url, None, {'Referer': 'testing'})
     response = urllib2.urlopen(request_obj)
 
@@ -83,18 +82,17 @@ def keyword_to_images(keyword):
     data = results['responseData']
     dataInfo = data['results']
 
-    images = []
     # Iterate for each result and get unescaped url
+    images = []
     for myUrl in dataInfo:
-        print myUrl['unescapedUrl']
+        # print myUrl['unescapedUrl']
         images.append(myUrl['unescapedUrl'])
         # return myUrl['unescapedUrl']
         # myopener.retrieve(myUrl['unescapedUrl'],str(count)+'.jpg')
     return images
-    # return keyword
 
 
-def text_to_images(text=""):
+def text_to_images(text):
     """
     Uses two helper methods to convert text (fb status)
     into a related image
@@ -104,20 +102,20 @@ def text_to_images(text=""):
     return images
 
 
-@app.route('/', methods=['POST', 'GET'])
+@app.route('/', methods=['POST'])
 def main():
     """
     Input POST requests with the text field being
     populated with a facebook status. We return an
     appropriate image for that status using NLP.
     """
-    # text = request.form['text']
+    text = request.form['text']
 
-    text = request.args.get('text', '')
+    # text = request.args.get('text', '')
 
     # return ''
-    # if not text:
-    #    abort(404)
+    if not text:
+        abort(404)
 
     images = text_to_images(text)
     return jsonify({
@@ -131,5 +129,4 @@ def main():
 app.debug = app.config['DEBUG']
 
 if __name__ == '__main__':
-    print ''
     app.run()
