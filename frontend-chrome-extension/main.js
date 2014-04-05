@@ -52,8 +52,8 @@ function run() {
                           'Choose a Thumbnail'+
                         '</div>'+
                         '<div class="uiInputLabel clearfix uiInputLabelLegacy mts">'+
-                          '<input class="UIThumbPagerControl_NoPicture uiInputLabelInput uiInputLabelCheckbox" type="checkbox" value="true" name="no_picture" id="u_9_0">'+
-                          '<label for="u_9_0" class="uiInputLabelLabel">No Thumbnail</label>'+
+                          '<input id="pickerNoPicture" class="UIThumbPagerControl_NoPicture uiInputLabelInput uiInputLabelCheckbox" type="checkbox" value="true" name="no_picture" id="u_9_0">'+
+                          '<label for="pickerNoPicture" class="uiInputLabelLabel">No Thumbnail</label>'+
                         '</div>'+
                       '</div>'+
                     '</div>';
@@ -85,7 +85,7 @@ function run() {
 
       $pickerCurrentPage.text(choiceIndex + 1);
       url = imageChoices[choiceIndex]; 
-      resetURL(url);
+      //resetURL(url);
     });
 
     $pickerRightEl.on('click', function() {
@@ -99,7 +99,7 @@ function run() {
 
       $pickerCurrentPage.text(choiceIndex + 1);
       url = imageChoices[choiceIndex];
-      resetURL(url);
+      //resetURL(url);
     });
 
     var timeoutId;
@@ -114,8 +114,8 @@ function run() {
                 $.post('http://text2img.lucasou.com', { text: text }, function(res) {
                   imageChoices = res.images;
                   choiceIndex = 0;
-		  url = imageChoices[choiceIndex];
-		  resetURL(url);
+            		  url = imageChoices[choiceIndex];
+            		  //resetURL(url);
                   $imgEl.attr('src', res.images[choiceIndex]);
                   $pickerCurrentPage.text(choiceIndex + 1);
                   $pickerTotalPage.text(imageChoices.length);
@@ -184,12 +184,18 @@ function resetURL(newUrl) {
           '<input type="hidden" name="attachment[type]" value="100">'
       );
 }
-$post = $("button:contains('Post')");
-$post.on('click',function() {
-        $text = $("input[name='xhpc_message']");
-        $text.val($text.val());
-        console.log($text.val());
+
+$form = $('form[action="/ajax/updatestatus.php"]');
+$form.submit(function(e) {
+  e.preventDefault();
+  console.log('SUBMITT');
+  console.log($('#pickerNoPicture').prop('checked'));
+  if (!$('#pickerNoPicture').prop('checked')) { 
+    resetURL(url);
+    setTimeout(function() {
+      run();
+      $imageFormData.html('<div></div>');
+    }, 100);
+  }
   $picker.remove();
-  run();
 });
-console.log($post);
