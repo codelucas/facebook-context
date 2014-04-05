@@ -2,13 +2,13 @@
 var target = document.querySelector('head > title');
 var observer = new window.WebKitMutationObserver(function(mutations) {
     mutations.forEach(function(mutation) {
-	console.log("CAUGHT THE PAGE CHANGE");
-	$statusEl = $('.innerWrap textarea[name="xhpc_message"]');
+      console.log("CAUGHT THE PAGE CHANGE");
+      $statusEl = $('.innerWrap textarea[name="xhpc_message"]');
 
-	//Rerun the event listener	
-	$statusEl.one('click', function() {
-  	setTimeout(run, 500);
-	});
+      //Rerun the event listener
+      $statusEl.one('click', function() {
+        setTimeout(setup, 500);
+      });
     });
 });
 observer.observe(target, { subtree: true, characterData: true, childList: true });
@@ -142,8 +142,8 @@ function setup() {
                     return;
                   }
 
-            		  url = imageChoices[choiceIndex];
-            		  //resetURL(url);
+                  url = imageChoices[choiceIndex];
+                  //resetURL(url);
                   $imgEl.attr('src', res.images[choiceIndex]);
                   $pickerCurrentPage.text(choiceIndex + 1);
                   $pickerTotalPage.text(imageChoices.length);
