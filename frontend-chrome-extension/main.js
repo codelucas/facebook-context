@@ -1,6 +1,6 @@
 console.log('------------loadded------------------------');
 $statusEl = $('.innerWrap textarea[name="xhpc_message"]');
-$statusEl.on('click', function() {
+$statusEl.one('click', function() {
   setTimeout(function() {
     $formInput = $('.innerWrap textarea[name="xhpc_message_text"]');
 
