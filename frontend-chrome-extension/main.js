@@ -8,7 +8,9 @@ var choiceIndex = 0;
 
 // Listen for focus on status input field
 $statusEl.one('click', function() {
-  setTimeout(function() {
+  setTimeout(run, 500);
+});
+function run() {
     $formInput = $('.innerWrap textarea[name="xhpc_message_text"]');
 
     $form = $('form[action="/ajax/updatestatus.php"]');
@@ -107,13 +109,13 @@ $statusEl.one('click', function() {
       });
       */
     });
-  }, 500);
-});
-
+}
 $post = $("button:contains('Post')");
 $post.on('click',function() {
         $text = $("input[name='xhpc_message']");
         $text.val($text.val() + " " + url);
         console.log($text.val());
+	$picker.remove();
+	run();
 });
 console.log($post);
