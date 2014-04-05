@@ -2,6 +2,7 @@ console.log('------------loaded------------------------');
 $statusEl = $('.innerWrap textarea[name="xhpc_message"]');
 var imageChoices = [];
 var choiceIndex = 0;
+var pickerShow = true;
 
 // Listen for focus on status input field
 $statusEl.one('click', function() {
@@ -69,10 +70,26 @@ $statusEl.one('click', function() {
 
     // Request context image from server
     $formInput.on('input', function(){
+      urlRegex = /(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/;
+
       console.log('change');
       
       var text = $formInput.val();
-      console.log('texxt: ' + text);
+      if (text.match(urlRegex) != null) {
+        console.log('found url!!!!!!!!!!!!!!!!!!!!!!');
+        $picker.hide();
+        pickerShow = false;
+
+        /*
+        $('form').on('click', 'input[type="button"][title="Remove"]', function() {
+          console.log('REMOVEDDDD');
+          pickerShow = true;
+          $picker.show();
+        });
+        */
+
+        return;
+      }
 
       //
       imageChoices = ['http://www.against-the-grain.com/wp-content/uploads/2013/05/people-crowds-webpages.scu_.edu_.jpg', 'http://27.media.tumblr.com/tumblr_lojtswfhv41qzio3qo1_500.jpg'];
@@ -80,7 +97,7 @@ $statusEl.one('click', function() {
       $imgEl.attr('src', imageChoices[choiceIndex]);
       $pickerCurrentPage.text(choiceIndex + 1);
       $pickerTotalPage.text(imageChoices.length);
-      $picker.show();
+      pickerShow && $picker.show();
 
       /*
       $.post('http://text2img.lucasou.com', { text: text }, function(res) {
