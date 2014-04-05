@@ -26,15 +26,13 @@ $statusEl = $('.innerWrap textarea[name="xhpc_message"]');
 
 // Listen for focus on status input field
 $statusEl.one('click', function() {
-  setTimeout(run, 500);
+  setTimeout(setup, 500);
 });
-function run() {
+
+function setup() {
     console.log("WE GOT A CLICK");
-    $imageFormData = $("<div></div>");
-    url = "";
-    var imageChoices = [];
-    var choiceIndex = 0;
-    var pickerShow = true;
+    resetPicker();
+
     $formInput = $('.innerWrap textarea[name="xhpc_message_text"]');
 
     $form = $('form[action="/ajax/updatestatus.php"]');
@@ -80,8 +78,10 @@ function run() {
       $imgEl.attr('src', imageChoices[choiceIndex]);
       if (choiceIndex == 0) {
         $pickerLeftEl.addClass('pickerControlButton_First');
+        //$pickerLeftEl.prop('disabled', true);
       }
       $pickerRightEl.removeClass('pickerControlButton_Last');
+      //$pickerRightEl.prop('disabled', false);
 
       $pickerCurrentPage.text(choiceIndex + 1);
       url = imageChoices[choiceIndex]; 
@@ -94,8 +94,10 @@ function run() {
       $imgEl.attr('src', imageChoices[choiceIndex]);
       if (choiceIndex == imageChoices.length - 1) {
         $pickerRightEl.addClass('pickerControlButton_Last');
+        //$pickerRightEl.prop('disabled', true);
       }
       $pickerLeftEl.removeClass('pickerControlButton_First');
+      //$pickerLeftEl.prop('disabled', false);
 
       $pickerCurrentPage.text(choiceIndex + 1);
       url = imageChoices[choiceIndex];
@@ -129,8 +131,17 @@ function run() {
                 if (text.length == 0) return;
 
                 $.post('http://text2img.lucasou.com', { text: text }, function(res) {
+                  console.log(text);
+                  console.log(imageChoices);
+
                   imageChoices = res.images;
                   choiceIndex = 0;
+
+                  if (res.images.length == 0) {
+                    $picker.hide();
+                    return;
+                  }
+
             		  url = imageChoices[choiceIndex];
             		  //resetURL(url);
                   $imgEl.attr('src', res.images[choiceIndex]);
@@ -171,7 +182,7 @@ function run() {
         */
         return;
       }
-      if (text.length) autocomplete(text);
+      autocomplete(text);
      /*
       imageChoices = [
         'http://www.against-the-grain.com/wp-content/uploads/2013/05/people-crowds-webpages.scu_.edu_.jpg',
@@ -198,6 +209,14 @@ function run() {
     });
 }
 
+function resetPicker() {
+  $imageFormData.html('<div></div>');
+  url = "";
+  imageChoices = [];
+  choiceIndex = 0;
+  pickerShow = true;
+}
+
 function resetURL(newUrl) {
  $imageFormData.html(
         '<input type="hidden" name="attachment[params][urlInfo][canonical]" value="'  + newUrl + '">' +
@@ -219,9 +238,9 @@ $form.submit(function(e) {
   if (!$('#pickerNoPicture').prop('checked') && imageChoices.length != 0) { 
     resetURL(url);
     setTimeout(function() {
-      run();
+      resetPicker();
       $imageFormData.html('<div></div>');
     }, 100);
   }
-  $picker.remove();
+  $picker.hide();
 });
