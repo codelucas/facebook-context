@@ -89,6 +89,20 @@ function run() {
       //resetURL(url);
     });
 
+    function updateControlButtons() {
+      if (choiceIndex == imageChoices.length - 1) {
+        $pickerRightEl.addClass('pickerControlButton_Last');
+      } else {
+        $pickerRightEl.removeClass('pickerControlButton_Last');
+      }
+
+      if (choiceIndex == 0) {
+        $pickerLeftEl.addClass('pickerControlButton_First');
+      } else {
+        $pickerLeftEl.removeClass('pickerControlButton_First');
+      }
+    }
+
     var timeoutId;
     var counter = 0;
     function autocomplete(text) {
@@ -106,6 +120,7 @@ function run() {
                   $imgEl.attr('src', res.images[choiceIndex]);
                   $pickerCurrentPage.text(choiceIndex + 1);
                   $pickerTotalPage.text(imageChoices.length);
+                  updateControlButtons();
                   pickerShow && $picker.show(); // pickerShow == False means $picker.show() never runs
                 }); 
             }, 1000);
