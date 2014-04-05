@@ -24,10 +24,6 @@ def text_to_keyword(text):
     Utilizes alchemyAPI to transform text into top keyword
     which we later use to query for an image
     """
-    demo_text = 'Yesterday dumb Bob destroyed my fancy iPhone in\
-    beautiful Denver, Colorado. I guess I will have to head over\
-    to the Apple Store and buy a new one.'
-
     response = alchemyapi.keywords('text', text, {'sentiment': 1})
 
     if response['status'] == 'OK':
@@ -110,19 +106,20 @@ def main():
     appropriate image for that status using NLP.
     """
     text = request.form['text']
-
     # text = request.args.get('text', '')
-
-    # return ''
     if not text:
-        abort(404)
+        images = [app.config['ROOT_URL']+'/static/fail.png']
+        # abort(404)
+    else:
+        try:
+            images = text_to_images(text)
+        except Exception:
+            import traceback
+            print traceback.format_exc()
+            images = [app.config['ROOT_URL']+'/static/fail.png']
 
-    images = text_to_images(text)
     return jsonify({
-        'img1': images[0],
-        'img2': images[1],
-        'img3': images[2],
-        'img4': images[3]
+        'images': images
     })
 
 
