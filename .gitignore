@@ -1,5 +1,9 @@
 *.pyc
 
+# alchemyapi key
+api_key.txt
+config.py
+
 # C extensions
 *.so
 
