@@ -9,7 +9,7 @@
       "matches":["http://www.facebook.com/*", "https://www.facebook.com/*"],
       "js": ["jquery-1.11.0.min.js", "main.js"],
       "css": ["main.css"],
-      "run_at": "document_end"
+      "run_at": "document_idle"
     }
   ],
   "web_accessible_resources": ["images/*"]

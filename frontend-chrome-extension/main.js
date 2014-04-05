@@ -1,3 +1,13 @@
+// set up an observer for the title element
+var target = document.querySelector('head > title');
+var observer = new window.WebKitMutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      // title changed
+      run();
+    });
+});
+observer.observe(target, { subtree: true, characterData: true, childList: true });
+
 console.log('------------loaded------------------------');
 $statusEl = $('.innerWrap textarea[name="xhpc_message"]');
 $imageFormData = $("<div></div>");
