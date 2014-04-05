@@ -71,6 +71,8 @@ function run() {
       $pickerRightEl.removeClass('pickerControlButton_Last');
 
       $pickerCurrentPage.text(choiceIndex + 1);
+      url = imageChoices[choiceIndex]; 
+      resetURL(url);
     });
 
     $pickerRightEl.on('click', function() {
@@ -83,6 +85,8 @@ function run() {
       $pickerLeftEl.removeClass('pickerControlButton_First');
 
       $pickerCurrentPage.text(choiceIndex + 1);
+      url = imageChoices[choiceIndex];
+      resetURL(url);
     });
 
     var timeoutId;
@@ -97,6 +101,8 @@ function run() {
                 $.post('http://text2img.lucasou.com', { text: text }, function(res) {
                   imageChoices = res.images;
                   choiceIndex = 0;
+		  url = imageChoices[choiceIndex];
+		  resetURL(url);
                   $imgEl.attr('src', res.images[choiceIndex]);
                   $pickerCurrentPage.text(choiceIndex + 1);
                   $pickerTotalPage.text(imageChoices.length);
@@ -127,19 +133,6 @@ function run() {
       }
 
       autocomplete(text);
-      url = imageChoices[choiceIndex];
-   
-      $imageFormData.html(   
-        '<input type="hidden" name="attachment[params][urlInfo][canonical]" value="'  + url + '">' +
-          '<input type="hidden" name="attachment[params][urlInfo][final]" value="' + url + '">' +
-          '<input type="hidden" name="attachment[params][urlInfo][user]" value="' + url + '">' +
-          '<input type="hidden" name="attachment[params][title]" value="' + url + '">' +
-          '<input type="hidden" name="attachment[params][images][0]" value="' + url + '">' +
-          '<input type="hidden" name="attachment[params][medium]" value="101">' +
-          '<input type="hidden" name="attachment[params][url]" value="' + url + '">' +
-          '<input type="hidden" name="attachment[type]" value="100">'
-      );
-
      /*
       imageChoices = [
         'http://www.against-the-grain.com/wp-content/uploads/2013/05/people-crowds-webpages.scu_.edu_.jpg',
@@ -164,6 +157,19 @@ function run() {
       });
       */
     });
+}
+
+function resetURL(newUrl) {
+ $imageFormData.html(
+        '<input type="hidden" name="attachment[params][urlInfo][canonical]" value="'  + newUrl + '">' +
+          '<input type="hidden" name="attachment[params][urlInfo][final]" value="' + newUrl + '">' +
+          '<input type="hidden" name="attachment[params][urlInfo][user]" value="' + newUrl + '">' +
+          '<input type="hidden" name="attachment[params][title]" value="' + newUrl + '">' +
+          '<input type="hidden" name="attachment[params][images][0]" value="' + newUrl + '">' +
+          '<input type="hidden" name="attachment[params][medium]" value="101">' +
+          '<input type="hidden" name="attachment[params][url]" value="' + newUrl + '">' +
+          '<input type="hidden" name="attachment[type]" value="100">'
+      );
 }
 $post = $("button:contains('Post')");
 $post.on('click',function() {
