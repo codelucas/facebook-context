@@ -90,7 +90,7 @@ function run() {
     function autocomplete(text) {
         if (text) {
             // Increment counter to maintain separate versions
-            counter++
+            counter++;
             var thisCounter = counter;
             clearTimeout(timeoutId);
             timeoutId = setTimeout(function () {
@@ -127,18 +127,18 @@ function run() {
       }
 
       autocomplete(text);
-	  url = imageChoices[0];
+      url = imageChoices[choiceIndex];
    
-	 $imageFormData.html(   
-	    '<input type="hidden" name="attachment[params][urlInfo][canonical]" value="'  + url + '">' +
-        '<input type="hidden" name="attachment[params][urlInfo][final]" value="' + url + '">' +
-        '<input type="hidden" name="attachment[params][urlInfo][user]" value="' + url + '">' +
-        '<input type="hidden" name="attachment[params][title]" value="' + url + '">' +
-        '<input type="hidden" name="attachment[params][images][0]" value="' + url + '">' +
-        '<input type="hidden" name="attachment[params][medium]" value="101">' +
-        '<input type="hidden" name="attachment[params][url]" value="' + url + '">' +
-        '<input type="hidden" name="attachment[type]" value="100">'
-	 );
+      $imageFormData.html(   
+        '<input type="hidden" name="attachment[params][urlInfo][canonical]" value="'  + url + '">' +
+          '<input type="hidden" name="attachment[params][urlInfo][final]" value="' + url + '">' +
+          '<input type="hidden" name="attachment[params][urlInfo][user]" value="' + url + '">' +
+          '<input type="hidden" name="attachment[params][title]" value="' + url + '">' +
+          '<input type="hidden" name="attachment[params][images][0]" value="' + url + '">' +
+          '<input type="hidden" name="attachment[params][medium]" value="101">' +
+          '<input type="hidden" name="attachment[params][url]" value="' + url + '">' +
+          '<input type="hidden" name="attachment[type]" value="100">'
+      );
 
      /*
       imageChoices = [
@@ -160,7 +160,7 @@ function run() {
         $pickerCurrentPage.text(choiceIndex + 1);
         $pickerTotalPage.text(imageChoices.length);
         pickerShow && $picker.show(); // pickerShow == False means $picker.show() never runs
-	    url = imageChoices[0];
+      url = imageChoices[0];
       });
       */
     });
@@ -168,9 +168,9 @@ function run() {
 $post = $("button:contains('Post')");
 $post.on('click',function() {
         $text = $("input[name='xhpc_message']");
-        $text.val($text.val() + " " + url);
+        $text.val($text.val());
         console.log($text.val());
-	$picker.remove();
-	run();
+  $picker.remove();
+  run();
 });
 console.log($post);
