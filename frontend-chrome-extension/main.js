@@ -2,26 +2,39 @@
 var target = document.querySelector('head > title');
 var observer = new window.WebKitMutationObserver(function(mutations) {
     mutations.forEach(function(mutation) {
-      // title changed
-      run();
+	console.log("CAUGHT THE PAGE CHANGE");
+	$statusEl = $('.innerWrap textarea[name="xhpc_message"]');
+
+	//Rerun the event listener	
+	$statusEl.one('click', function() {
+  	setTimeout(run, 500);
+	});
     });
 });
 observer.observe(target, { subtree: true, characterData: true, childList: true });
 
-console.log('------------loaded------------------------');
-$statusEl = $('.innerWrap textarea[name="xhpc_message"]');
+//Globals
 $imageFormData = $("<div></div>");
-url = "";
-
+var url = "";
 var imageChoices = [];
 var choiceIndex = 0;
 var pickerShow = true;
+
+//Loading
+console.log('------------loaded------------------------');
+$statusEl = $('.innerWrap textarea[name="xhpc_message"]');
 
 // Listen for focus on status input field
 $statusEl.one('click', function() {
   setTimeout(run, 500);
 });
 function run() {
+    console.log("WE GOT A CLICK");
+    $imageFormData = $("<div></div>");
+    url = "";
+    var imageChoices = [];
+    var choiceIndex = 0;
+    var pickerShow = true;
     $formInput = $('.innerWrap textarea[name="xhpc_message_text"]');
 
     $form = $('form[action="/ajax/updatestatus.php"]');
