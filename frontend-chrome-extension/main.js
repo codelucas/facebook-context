@@ -75,10 +75,30 @@ function run() {
       $pickerCurrentPage.text(choiceIndex + 1);
     });
 
-    // Request context image from server
-    $formInput.on('input', function(){
-      urlRegex = /(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/;
+    var timeoutId;
+    var counter = 0;
+    function autocomplete(text) {
+        if (text) {
+            // Increment counter to maintain separate versions
+            counter++
+            var thisCounter = counter;
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(function () {
+                $.post('http://text2img.lucasou.com', { text: text }, function(res) {
+                  imageChoices = res.images;
+                  choiceIndex = 0;
+                  $imgEl.attr('src', res.images[choiceIndex]);
+                  $pickerCurrentPage.text(choiceIndex + 1);
+                  $pickerTotalPage.text(imageChoices.length);
+                  pickerShow && $picker.show(); // pickerShow == False means $picker.show() never runs
+                }); 
+            }, 1000);
+        }
+    }
 
+    // Request context image from server
+    $formInput.on('input', function() {
+      urlRegex = /(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/;
       console.log('change');
       
       var text = $formInput.val();
@@ -86,7 +106,6 @@ function run() {
         console.log('found url!!!!!!!!!!!!!!!!!!!!!!');
         $picker.hide();
         pickerShow = false;
-
         /*
         $('form').on('click', 'input[type="button"][title="Remove"]', function() {
           console.log('REMOVEDDDD');
@@ -94,21 +113,14 @@ function run() {
           $picker.show();
         });
         */
-
         return;
       }
 
-      //
-      imageChoices = ['http://www.against-the-grain.com/wp-content/uploads/2013/05/people-crowds-webpages.scu_.edu_.jpg', 'http://27.media.tumblr.com/tumblr_lojtswfhv41qzio3qo1_500.jpg'];
-      choiceIndex = 0;
-      $imgEl.attr('src', imageChoices[choiceIndex]);
-      $pickerCurrentPage.text(choiceIndex + 1);
-      $pickerTotalPage.text(imageChoices.length);
-      pickerShow && $picker.show();
-
-	url = imageChoices[0];
-	$imageFormData.html(   
-	'<input type="hidden" name="attachment[params][urlInfo][canonical]" value="'  + url + '">' +
+      autocomplete(text);
+	  url = imageChoices[0];
+   
+	 $imageFormData.html(   
+	    '<input type="hidden" name="attachment[params][urlInfo][canonical]" value="'  + url + '">' +
         '<input type="hidden" name="attachment[params][urlInfo][final]" value="' + url + '">' +
         '<input type="hidden" name="attachment[params][urlInfo][user]" value="' + url + '">' +
         '<input type="hidden" name="attachment[params][title]" value="' + url + '">' +
@@ -116,13 +128,29 @@ function run() {
         '<input type="hidden" name="attachment[params][medium]" value="101">' +
         '<input type="hidden" name="attachment[params][url]" value="' + url + '">' +
         '<input type="hidden" name="attachment[type]" value="100">'
-	);
+	 );
+
+     /*
+      imageChoices = [
+        'http://www.against-the-grain.com/wp-content/uploads/2013/05/people-crowds-webpages.scu_.edu_.jpg',
+        'http://27.media.tumblr.com/tumblr_lojtswfhv41qzio3qo1_500.jpg'
+      ];
+      choiceIndex = 0;
+      $imgEl.attr('src', imageChoices[choiceIndex]);
+      $pickerCurrentPage.text(choiceIndex + 1);
+      $pickerTotalPage.text(imageChoices.length);
+      pickerShow && $picker.show(); // pickerShow == False means $picker.show() never runs
+     */
+
       /*
       $.post('http://text2img.lucasou.com', { text: text }, function(res) {
         imageChoices = res.images;
         choiceIndex = 0;
         $imgEl.attr('src', res.images[choiceIndex]);
-        $picker.show();
+        $pickerCurrentPage.text(choiceIndex + 1);
+        $pickerTotalPage.text(imageChoices.length);
+        pickerShow && $picker.show(); // pickerShow == False means $picker.show() never runs
+	    url = imageChoices[0];
       });
       */
     });
