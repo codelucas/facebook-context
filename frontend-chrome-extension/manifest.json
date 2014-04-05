@@ -1,0 +1,12 @@
+{
+  "manifest_version": 2,
+  "name": "text2img",
+  "description": "",
+  "version": "1.0",
+  "content_scripts": [
+    {
+      "matches":["https://www.facebook.com/*", "http://www.facebook.com/*"],
+      "js": ["jquery-1.11.0.min.js", "main.js"]
+    }
+  ]
+}
