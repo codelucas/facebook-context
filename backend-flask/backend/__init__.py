@@ -4,7 +4,7 @@
 Written by:
 Lucas, Kevin, Olivier for the Facebook SoCal regional hackathon.
 """
-from flask import Flask, request, jsonify, abort
+from flask import Flask, request, jsonify  # , abort
 from alchemyapi import AlchemyAPI
 import json
 
@@ -19,23 +19,27 @@ app.config.from_object('config')
 alchemyapi = AlchemyAPI()
 
 
-def text_to_keyword(text):
+def text_to_keywords(text):
     """
     Utilizes alchemyAPI to transform text into top keyword
     which we later use to query for an image
+
+    Return the top **two** keywords
     """
     response = alchemyapi.keywords('text', text, {'sentiment': 1})
+    ret_keys = []
 
     if response['status'] == 'OK':
-        # print(json.dumps(response, indent=4))
         keywords = response['keywords']
-        if len(keywords) > 0:
-            keyw_chunk = keywords[0]
+        for keyw_chunk in keywords[:2]:
+            # if len(keywords) > 0:
+            #    keyw_chunk = keywords[0]
             top_keyword = keyw_chunk['text'].encode('utf-8')
-        else:
-            top_keyword = ''
+            # else:
+            #     top_keyword = ''
+            ret_keys.append(top_keyword)
 
-        return top_keyword
+        return ret_keys  # top_keyword
 
         # for keyword in response['keywords']:
         #    print('text: ', keyword['text'].encode('utf-8'))
@@ -46,7 +50,7 @@ def text_to_keyword(text):
         #    print('')
     else:
         print('Error in keyword extaction call: ', response['statusInfo'])
-        return ''
+        return []  # ''
 
 
 class MyOpener(FancyURLopener):
@@ -54,12 +58,12 @@ class MyOpener(FancyURLopener):
     Gecko/20071127 Firefox/2.0.0.11'
 
 
-def keyword_to_images(keyword):
+def keyword_to_images(keywords):
     """
     Uses google image api and our extracted keyword
     to find a related image to our status.
     """
-    searchTerm = keyword
+    searchTerm = ' '.join(keywords)
     searchTerm = searchTerm.replace(' ', '%20')
 
     # Start FancyURLopener with defined version
@@ -93,8 +97,8 @@ def text_to_images(text):
     Uses two helper methods to convert text (fb status)
     into a related image
     """
-    top_keyword = text_to_keyword(text)
-    images = keyword_to_images(top_keyword)
+    top_keywords = text_to_keywords(text)
+    images = keyword_to_images(top_keywords)
     return images
 
 
