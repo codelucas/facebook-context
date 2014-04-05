@@ -3,11 +3,13 @@
   "name": "text2img",
   "description": "",
   "version": "1.0",
-  "permissions": ["http://pugme.herokuapp.com/random"],
+  "permissions": ["http://text2img.lucasou.com/"],
   "content_scripts": [
     {
       "matches":["http://www.facebook.com/*", "https://www.facebook.com/*"],
-      "js": ["jquery-1.11.0.min.js", "main.js"]
+      "js": ["jquery-1.11.0.min.js", "main.js"],
+      "css": ["main.css"]
     }
-  ]
+  ],
+  "web_accessible_resources": ["images/*"]
 }
